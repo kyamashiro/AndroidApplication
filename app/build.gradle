@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: "org.jlleitschuh.gradle.ktlint"
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 android {
     compileSdkVersion 29
@@ -25,10 +27,6 @@ android {
 
 }
 
-configurations {
-    ktlint
-}
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -38,24 +36,15 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    ktlint "com.pinterest:ktlint:0.36.0"
 }
 
-
-// ktlint settings
-task ktlint(type: JavaExec, group: "verification") {
-    description = "Check Kotlin code style."
-    classpath = configurations.ktlint
-    main = "com.pinterest.ktlint.Main"
-    args "src/**/*.kt", "android", "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/reports/ktlint/ktlint-result.xml"
-    ignoreExitValue true
-}
-check.dependsOn ktlint
-
-task ktlintFormat(type: JavaExec, group: "formatting") {
-    description = "Fix Kotlin code style deviations."
-    classpath = configurations.ktlint
-    main = "com.pinterest.ktlint.Main"
-    args "-F", "src/**/*.kt", "android", "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/reports/ktlint/ktlint-result.xml"
-    ignoreExitValue true
+ktlint {
+    verbose.set(true)
+    android.set(false)
+    outputToConsole.set(true)
+    outputColorName.set("RED")
+    ignoreFailures.set(true)
+    reporters {
+        reporter(ReporterType.CHECKSTYLE)
+    }
 }

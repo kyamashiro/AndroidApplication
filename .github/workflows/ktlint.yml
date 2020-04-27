@@ -3,6 +3,7 @@ on:
   pull_request:
     branches:
       - master
+      - development
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,7 +19,7 @@ jobs:
           gem install bundler
           bundle install --path vendor/bundle
       - name: run ktlint
-        run: ./gradlew ktlint
+        run: ./gradlew ktlintCheck
       - name: run danger
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
