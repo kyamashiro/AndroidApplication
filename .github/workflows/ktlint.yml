@@ -19,7 +19,7 @@ jobs:
           gem install bundler
           bundle install --path vendor/bundle
       - name: run ktlint
-        run: ./gradlew ktlintCheck
+        run: git --no-pager diff --name-status --no-color | awk '$1 != "D" && $2 ~ /\.kts|\.kt/ { print $2}' | xargs -i{} ./gradlew ktlintCheck -P internalKtlintGitFilter={}
       - name: run danger
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
