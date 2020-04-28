@@ -2,7 +2,7 @@ package com.example.androidapplication
 
 class Test {
     fun test() {
-        val str: String = "aaa"
+        var str:String = "aaa"
         println(str)
     }
 }
